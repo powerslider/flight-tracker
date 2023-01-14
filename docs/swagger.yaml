@@ -1,0 +1,37 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: tsvetan.dimitrov23@gmail.com
+    name: Tsvetan Dimitrov
+  description: Demo service for tracking flights.
+  license:
+    name: MIT
+    url: https://www.mit.edu/~amini/LICENSE.md
+  termsOfService: http://swagger.io/terms/
+  title: Flight Tracker API
+  version: "1.0"
+paths:
+  /calculate:
+    post:
+      consumes:
+      - application/json
+      description: Trace start and end airport given a list of flight routes.
+      parameters:
+      - description: Flight Routes
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            items:
+              type: string
+            type: array
+          type: array
+      produces:
+      - application/json
+      responses: {}
+      summary: Trace start and end airport given a list of flight routes.
+      tags:
+      - flights
+swagger: "2.0"
