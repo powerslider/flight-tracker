@@ -8,6 +8,7 @@ type OrderedSet[T comparable] struct {
 	length  int
 }
 
+// NewOrderedSet constructs a new instance of OrderedSet.
 func NewOrderedSet[T comparable]() *OrderedSet[T] {
 	return &OrderedSet[T]{
 		indexes: make(map[T]int),

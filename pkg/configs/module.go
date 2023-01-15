@@ -2,7 +2,7 @@ package configs
 
 import "go.uber.org/fx"
 
-// Module exports constructors as fx dependencies.
+// Module FX module function wiring internal dependencies.
 func Module() fx.Option {
 	return fx.Options(
 		fx.Provide(

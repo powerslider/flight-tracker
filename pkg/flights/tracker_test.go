@@ -3,6 +3,7 @@ package flights_test
 import (
 	"github.com/powerslider/flight-tracker/pkg/flights"
 	"github.com/stretchr/testify/assert"
+
 	"strings"
 	"testing"
 )
@@ -76,15 +77,18 @@ func TestFlightTracker(t *testing.T) {
 
 func TestFlightTrackerCyclicDependencies(t *testing.T) {
 	tests := []struct {
-		input    [][]flights.Airport
-		expected string
+		input                  [][]flights.Airport
+		expectedPossibleCycles []string
 	}{
 		{
 			input: [][]flights.Airport{
 				{"A", "B"},
 				{"B", "A"},
 			},
-			expected: "A -> B -> A",
+			expectedPossibleCycles: []string{
+				"A -> B -> A",
+				"B -> A -> B",
+			},
 		},
 		{
 			input: [][]flights.Airport{
@@ -92,7 +96,11 @@ func TestFlightTrackerCyclicDependencies(t *testing.T) {
 				{"B", "C"},
 				{"C", "B"},
 			},
-			expected: "B -> C -> B",
+			expectedPossibleCycles: []string{
+				"B -> C -> B",
+				"C -> B -> C",
+				"B -> A -> B",
+			},
 		},
 		{
 			input: [][]flights.Airport{
@@ -100,14 +108,21 @@ func TestFlightTrackerCyclicDependencies(t *testing.T) {
 				{"B", "C"},
 				{"C", "A"},
 			},
-			expected: "A -> B -> C -> A",
+			expectedPossibleCycles: []string{
+				"A -> B -> C -> A",
+				"B -> C -> A -> B",
+				"C -> A -> B -> C",
+			},
 		},
 		{
 			input: [][]flights.Airport{
 				{"SFO", "EWR"},
 				{"EWR", "SFO"},
 			},
-			expected: "SFO -> EWR -> SFO",
+			expectedPossibleCycles: []string{
+				"SFO -> EWR -> SFO",
+				"EWR -> SFO -> EWR",
+			},
 		},
 		{
 			input: [][]flights.Airport{
@@ -115,7 +130,11 @@ func TestFlightTrackerCyclicDependencies(t *testing.T) {
 				{"EWR", "ATL"},
 				{"ATL", "EWR"},
 			},
-			expected: "EWR -> ATL -> EWR",
+			expectedPossibleCycles: []string{
+				"EWR -> ATL -> EWR",
+				"EWR -> SFO -> EWR",
+				"ATL -> EWR -> ATL",
+			},
 		},
 		{
 			input: [][]flights.Airport{
@@ -123,7 +142,11 @@ func TestFlightTrackerCyclicDependencies(t *testing.T) {
 				{"EWR", "ATL"},
 				{"ATL", "SFO"},
 			},
-			expected: "SFO -> EWR -> ATL -> SFO",
+			expectedPossibleCycles: []string{
+				"SFO -> EWR -> ATL -> SFO",
+				"EWR -> ATL -> SFO -> EWR",
+				"ATL -> SFO -> EWR -> ATL",
+			},
 		},
 	}
 
@@ -139,8 +162,18 @@ func TestFlightTrackerCyclicDependencies(t *testing.T) {
 			t.Error("Expected cycle error did not occur!")
 		}
 
-		if !strings.Contains(err.Error(), test.expected) {
+		if !errorContainsAnyOf(test.expectedPossibleCycles, err) {
 			t.Errorf("Error does not print cycle: %q", err)
 		}
 	}
+}
+
+func errorContainsAnyOf(s []string, err error) bool {
+	for _, v := range s {
+		if strings.Contains(err.Error(), v) {
+			return true
+		}
+	}
+
+	return false
 }

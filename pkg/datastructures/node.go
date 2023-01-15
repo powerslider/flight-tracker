@@ -1,8 +1,9 @@
 package datastructures
 
+// Node represents a graph node.
 type Node[T comparable] map[T]bool
 
-func (n Node[T]) addEdge(key T) {
+func (n Node[T]) connectsTo(key T) {
 	n[key] = true
 }
 

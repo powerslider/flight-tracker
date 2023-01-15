@@ -2,10 +2,12 @@ package http
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	"go.uber.org/fx"
 )
 
+// ServerModule is a FX module function wiring internal dependencies.
 func ServerModule() fx.Option {
 	return fx.Options(
 		fx.Provide(
@@ -14,6 +16,7 @@ func ServerModule() fx.Option {
 	)
 }
 
+// RunServer handles server start-stop lifecycle.
 func RunServer(lc fx.Lifecycle, server *Server, errChan chan error) {
 	lc.Append(fx.Hook{
 		OnStart: onStart(errChan, server),

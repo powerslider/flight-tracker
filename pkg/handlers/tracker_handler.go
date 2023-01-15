@@ -2,17 +2,20 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/powerslider/flight-tracker/pkg/flights"
-	"go.uber.org/multierr"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/powerslider/flight-tracker/pkg/flights"
+	"go.uber.org/multierr"
 )
 
+// TrackerHandler represents an HTTP hander for flight tracking operations.
 type TrackerHandler struct {
 	FlightTracker *flights.Tracker
 }
 
+// NewTrackerHandler initializes a new instance of TrackerHandler.
 func NewTrackerHandler(tracker *flights.Tracker) *TrackerHandler {
 	return &TrackerHandler{
 		FlightTracker: tracker,
@@ -34,7 +37,7 @@ func (h *TrackerHandler) TracePath() http.HandlerFunc {
 
 	return func(rw http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		
+
 		//h.FlightTracker.AddFlightRoute("d", "b")
 		//h.FlightTracker.AddFlightRoute("a", "c")
 		//h.FlightTracker.AddFlightRoute("e", "d")

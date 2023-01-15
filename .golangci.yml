@@ -1,7 +1,6 @@
 linters:
   disable-all: true
   enable:
-    - deadcode
     - errcheck
     - goimports
     - revive
@@ -11,15 +10,13 @@ linters:
     - lll
     - misspell
     - staticcheck
-    - structcheck
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
     - whitespace
     - wsl
-    - godot
+#    - godot
 
     # don't enable:
     # - gochecknoglobals

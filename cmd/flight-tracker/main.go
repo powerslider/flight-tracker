@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"log"
+
+	"github.com/powerslider/flight-tracker/pkg/configs"
 	"github.com/powerslider/flight-tracker/pkg/handlers"
 	httptransport "github.com/powerslider/flight-tracker/pkg/transport/http"
 	"go.uber.org/fx"
-	"log"
 )
 
 // @title Flight Tracker API

@@ -3,11 +3,13 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
+	"github.com/powerslider/flight-tracker/pkg/configs"
 )
 
 // Server represents an HTTP server.

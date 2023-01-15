@@ -5,16 +5,19 @@ import (
 	"strings"
 )
 
+// Graph represents a graph data structure via an adjacency list.
 type Graph[T comparable] struct {
 	adjacencyList map[T]Node[T]
 }
 
+// NewGraph constructs a new instance of Graph.
 func NewGraph[T comparable]() *Graph[T] {
 	return &Graph[T]{
 		adjacencyList: make(map[T]Node[T]),
 	}
 }
 
+// NodeKeys extracts all node keys from the adjacency list.
 func (g *Graph[T]) NodeKeys() []T {
 	keys := make([]T, 0, len(g.adjacencyList))
 	for k := range g.adjacencyList {
@@ -24,6 +27,7 @@ func (g *Graph[T]) NodeKeys() []T {
 	return keys
 }
 
+// AddNodeIfAbsent adds a new node to the adjacency list representation of the graph if needed.
 func (g *Graph[T]) AddNodeIfAbsent(node T) Node[T] {
 	// Check if node is already added.
 	n, ok := g.adjacencyList[node]
@@ -38,6 +42,7 @@ func (g *Graph[T]) AddNodeIfAbsent(node T) Node[T] {
 	return n
 }
 
+// AddEdge connects two nodes with an edge.
 func (g *Graph[T]) AddEdge(from T, to T) {
 	// Add from node.
 	fromNode := g.AddNodeIfAbsent(from)
@@ -45,15 +50,17 @@ func (g *Graph[T]) AddEdge(from T, to T) {
 	_ = g.AddNodeIfAbsent(to)
 
 	// Connect from and to adjacencyList via an edge.
-	fromNode.addEdge(to)
+	fromNode.connectsTo(to)
 }
 
+// ContainsNode checks if a node is part of the graph via its node key.
 func (g *Graph[T]) ContainsNode(key T) bool {
 	_, ok := g.adjacencyList[key]
 
 	return ok
 }
 
+// ResolveDependencies runs topological sorting to wire all transitive dependencies of a DAG.
 func (g *Graph[T]) ResolveDependencies(key T) ([]T, error) {
 	results := NewOrderedSet[T]()
 
@@ -66,6 +73,7 @@ func (g *Graph[T]) ResolveDependencies(key T) ([]T, error) {
 	return results.items, nil
 }
 
+// LongestPath detects the longest path in a DAG.
 func (g *Graph[T]) LongestPath() ([]T, error) {
 	longestPath := make([]T, 0)
 

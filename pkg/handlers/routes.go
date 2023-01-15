@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"fmt"
+
 	"github.com/gorilla/mux"
 	_ "github.com/powerslider/flight-tracker/docs"
+	"github.com/powerslider/flight-tracker/pkg/configs"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
