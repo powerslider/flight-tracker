@@ -38,11 +38,6 @@ func (h *TrackerHandler) TracePath() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		//h.FlightTracker.AddFlightRoute("d", "b")
-		//h.FlightTracker.AddFlightRoute("a", "c")
-		//h.FlightTracker.AddFlightRoute("e", "d")
-		//h.FlightTracker.AddFlightRoute("c", "e")
-
 		var reqBody request
 
 		reqBytes, errReqBytes := io.ReadAll(r.Body)
