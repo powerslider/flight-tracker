@@ -1,6 +1,7 @@
 package flights
 
 import (
+	"github.com/powerslider/flight-tracker/pkg/datastructures"
 	"sort"
 )
 

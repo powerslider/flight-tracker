@@ -1,58 +1,74 @@
 package flights_test
 
 import (
-	"fmt"
 	"github.com/powerslider/flight-tracker/pkg/flights"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestTopSort(t *testing.T) {
-	tracker := flights.NewTracker()
-
-	// a -> b -> c
-	tracker.AddFlightRoute("a", "b")
-	tracker.AddFlightRoute("b", "c")
-
-	results, err := tracker.Trace()
-	if err != nil {
-		t.Error(err)
-		return
+func TestFlightTracker(t *testing.T) {
+	tests := []struct {
+		input    [][]flights.Airport
+		expected []flights.Airport
+	}{
+		{
+			input: [][]flights.Airport{
+				{"A", "B"},
+			},
+			expected: []flights.Airport{"A", "B"},
+		},
+		{
+			input: [][]flights.Airport{
+				{"C", "B"},
+				{"A", "C"},
+			},
+			expected: []flights.Airport{"A", "B"},
+		},
+		{
+			input: [][]flights.Airport{
+				{"D", "B"},
+				{"A", "C"},
+				{"E", "D"},
+				{"C", "E"},
+			},
+			expected: []flights.Airport{"A", "B"},
+		},
+		{
+			input: [][]flights.Airport{
+				{"SFO", "EWR"},
+			},
+			expected: []flights.Airport{"SFO", "EWR"},
+		},
+		{
+			input: [][]flights.Airport{
+				{"ATL", "EWR"},
+				{"SFO", "ATL"},
+			},
+			expected: []flights.Airport{"SFO", "EWR"},
+		},
+		{
+			input: [][]flights.Airport{
+				{"IND", "EWR"},
+				{"SFO", "ATL"},
+				{"GSO", "IND"},
+				{"ATL", "GSO"},
+			},
+			expected: []flights.Airport{"SFO", "EWR"},
+		},
 	}
-	fmt.Println(results)
-	//if results[0] != "c" || results[1] != "b" || results[2] != "a" {
-	//	t.Errorf("Wrong sort order: %v", results)
-	//}
-}
 
-func TestTopSort2(t *testing.T) {
-	tracker := flights.NewTracker()
+	for _, test := range tests {
+		tracker := flights.NewTracker()
 
-	// a -> b -> c
-	tracker.AddFlightRoute("a", "b")
-	tracker.AddFlightRoute("c", "b")
-	tracker.AddFlightRoute("a", "c")
+		for _, row := range test.input {
+			tracker.AddFlightRoute(row[0], row[1])
+		}
 
-	results, err := tracker.Trace()
-	if err != nil {
-		t.Error(err)
-		return
+		actual, err := tracker.Trace()
+		if err != nil {
+			t.Error(err)
+		}
+
+		assert.Equal(t, actual, test.expected)
 	}
-	fmt.Println(results)
-}
-
-func TestTopSort3(t *testing.T) {
-	tracker := flights.NewTracker()
-
-	// a -> b -> c
-	tracker.AddFlightRoute("d", "b")
-	tracker.AddFlightRoute("a", "c")
-	tracker.AddFlightRoute("e", "d")
-	tracker.AddFlightRoute("c", "e")
-
-	results, err := tracker.Trace()
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	fmt.Println(results)
 }
